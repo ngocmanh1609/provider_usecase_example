@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:provider_usecase_example/data/network/base/api_result.dart';
 import 'package:provider_usecase_example/data/network/base/dio_client.dart';
 import 'package:provider_usecase_example/data/network/base/endpoints.dart';
@@ -18,10 +19,15 @@ class GithubServiceImpl extends GithubService {
     try {
       final response = await _dioClient.get(Endpoints.getRepositories);
       List<GithubRepositoryResponse> responseData = (response.data as List)
-          .map((repository) => GithubRepositoryResponse.fromJson(repository));
+          .map((repository) => GithubRepositoryResponse.fromJson(repository))
+          .toList();
       return ApiResult.success(responseData);
-    } catch (e) {
+    } on DioError catch (e) {
+      print(e);
       return ApiResult.failure(NetworkException(e));
+    } catch (e) {
+      print(e);
+      throw e;
     }
   }
 }
