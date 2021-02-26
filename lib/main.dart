@@ -6,6 +6,7 @@ import 'package:provider_usecase_example/di/di.dart';
 import 'package:provider_usecase_example/routes.dart';
 import 'package:provider_usecase_example/ui/screen/github/overview/github_overview_model.dart';
 import 'package:provider_usecase_example/ui/screen/github/overview/github_overview_screen.dart';
+import 'package:provider_usecase_example/ui/screen/home/home_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,11 +23,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      initialRoute: "/",
       routes: Routes.routes,
-      home: Provider(
-        create: (context) => getIt<GithubOverviewModel>(),
-        child: GithubOverviewScreen(),
-      ),
     );
   }
 }

@@ -1,5 +1,6 @@
 class GithubOverviewUiModel {
   final int id;
+  final String repoPath;
   final String repositoryName;
   final String repositoryDescription;
   final String ownerName;
@@ -7,6 +8,7 @@ class GithubOverviewUiModel {
 
   GithubOverviewUiModel(
       {this.id,
+      this.repoPath,
       this.repositoryName,
       this.repositoryDescription,
       this.ownerName,

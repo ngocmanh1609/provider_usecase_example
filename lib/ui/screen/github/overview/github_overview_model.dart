@@ -7,14 +7,16 @@ import 'package:rxdart/subjects.dart';
 abstract class GithubOverviewModel {
   ValueStream<List<GithubOverviewUiModel>> githubOverviewUiModels;
 
-  void fetchRepositories();
+  void dispose();
 }
 
 @Injectable(as: GithubOverviewModel)
 class GithubOverviewModelImpl extends GithubOverviewModel {
   GetGithubRepositoriesUseCase _getGithubRepositoriesUseCase;
 
-  GithubOverviewModelImpl(this._getGithubRepositoriesUseCase);
+  GithubOverviewModelImpl(this._getGithubRepositoriesUseCase) {
+    _fetchRepositories();
+  }
 
   final _githubOverviewUiModels =
       BehaviorSubject<List<GithubOverviewUiModel>>();
@@ -23,12 +25,12 @@ class GithubOverviewModelImpl extends GithubOverviewModel {
   ValueStream<List<GithubOverviewUiModel>> get githubOverviewUiModels =>
       _githubOverviewUiModels;
 
-  @override
-  void fetchRepositories() {
+  void _fetchRepositories() {
     _getGithubRepositoriesUseCase.execute().then((responses) {
       List<GithubOverviewUiModel> uiModels = responses.map((response) {
         return GithubOverviewUiModel(
           id: response.id,
+          repoPath: response.fullName,
           repositoryName: response.name ?? "",
           repositoryDescription: response.description ?? "",
           ownerName: response.owner.login ?? "",
@@ -39,5 +41,10 @@ class GithubOverviewModelImpl extends GithubOverviewModel {
     }, onError: (e) {
       _githubOverviewUiModels.addError(e);
     });
+  }
+
+  @override
+  void dispose() {
+    this._githubOverviewUiModels.close();
   }
 }

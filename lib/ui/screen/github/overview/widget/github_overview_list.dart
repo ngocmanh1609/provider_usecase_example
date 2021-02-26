@@ -9,11 +9,21 @@ class GithubOverviewList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var uiModels = context.watch<List<GithubOverviewUiModel>>();
-    return ListView.builder(
-      itemCount: uiModels.length,
-      itemBuilder: (ctx, index) {
-        return GithubOverviewItem(uiModels[index]);
-      },
-    );
+    if (uiModels == null) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    } else if (uiModels.isEmpty) {
+      return Center(
+        child: Text("There is no repositories"),
+      );
+    } else {
+      return ListView.builder(
+        itemCount: uiModels.length,
+        itemBuilder: (ctx, index) {
+          return GithubOverviewItem(uiModels[index]);
+        },
+      );
+    }
   }
 }

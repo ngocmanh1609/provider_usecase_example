@@ -5,6 +5,8 @@ import 'package:provider_usecase_example/data/network/service/github_service.dar
 
 abstract class GithubRepository {
   Future<List<GithubRepositoryResponse>> getRepositories();
+
+  Future<GithubRepositoryResponse> getRepository(String repositoryPath);
 }
 
 @Singleton(as: GithubRepository)
@@ -16,6 +18,17 @@ class GithubRepositoryImpl extends GithubRepository {
   @override
   Future<List<GithubRepositoryResponse>> getRepositories() {
     return _githubService.getRepositories().then((apiResult) {
+      if (apiResult.result == Result.Success) {
+        return Future.value(apiResult.data);
+      } else {
+        return Future.error(apiResult.error);
+      }
+    });
+  }
+
+  @override
+  Future<GithubRepositoryResponse> getRepository(String repositoryPath) {
+    return _githubService.getRepository(repositoryPath).then((apiResult) {
       if (apiResult.result == Result.Success) {
         return Future.value(apiResult.data);
       } else {
